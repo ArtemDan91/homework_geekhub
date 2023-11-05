@@ -26,20 +26,20 @@ def morse_code(morse_code_string):
 
     morse_code_string = morse_code_string.strip()
     words = morse_code_string.split('   ')
-    decoded_message = ''
+    decoded_message = []
 
     for word in words:
-        letters = word.split(' ')
-
+        letters = word.split()
+        
         for letter in letters:
-            if letter in morse_decode_dict:
-                decoded_message += morse_decode_dict[letter]
-            else:
-                decoded_message += ''
-        decoded_message += ' '
-
-    return decoded_message
-
+            decoded_message.append(morse_decode_dict[letter])
+        
+        
+        if word != words[-1]:
+            decoded_message.append(' ')
+    
+    return ''.join(decoded_message)
+    
 
 if __name__ == "__main__":
     print(morse_code('--. . . -.- .... ..- -...   .. ...   .... . .-. .'))
