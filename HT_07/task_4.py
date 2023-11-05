@@ -30,10 +30,9 @@ def morse_code(morse_code_string):
 
     for word in words:
         letters = word.split()
-        
+
         for letter in letters:
             decoded_message.append(morse_decode_dict[letter])
-        
         
         if word != words[-1]:
             decoded_message.append(' ')
