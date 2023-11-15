@@ -11,12 +11,20 @@
 from pathlib import Path
 
 
+class BlockSizeValidationError(Exception):
+    pass
+
+
 class FileSizeError(Exception):
     pass
 
 
 def find_file_blocks(file_name, block_size):
+    
     try:
+        if not isinstance(block_size, int) or block_size <= 0:
+            raise BlockSizeValidationError("Розмір блоку повинен бути цілим додатнім числом")
+        
         file_path = Path(__file__).resolve().parent / file_name
 
         if not file_path.exists():
@@ -25,36 +33,26 @@ def find_file_blocks(file_name, block_size):
         with open(file_path, 'r', encoding='utf-8') as file:
             file_data = file.read()
 
-            if block_size > len(file_data):
-                raise FileSizeError(
-                    "Кількість символів для блоку є більша, ніж є у файлі")
-
+            if len(file_data) < block_size * 3:
+                raise FileSizeError("Кількість символів у файлі є не достатьою для заповнення блоків")
+            
             start_block = file_data[:block_size]
-            middle_block = ''
-            end_block = ''
+        
+            middle_file_pos = len(file_data) // 2
+            mid_block_start = middle_file_pos - block_size // 2
+            mid_block_end = mid_block_start + block_size
+            middle_block = file_data[mid_block_start:mid_block_end]
 
-            if block_size < len(file_data) <= block_size * 2:
-                end_block = file_data[block_size:]
-
-            elif block_size * 2 < len(file_data) < block_size * 3:
-                middle_block = file_data[block_size:-block_size]
-                end_block = file_data[-block_size:]
-
-            elif len(file_data) >= block_size * 3:
-                middle_file_pos = len(file_data) // 2
-                mid_block_start = middle_file_pos - block_size // 2
-                mid_block_end = mid_block_start + block_size
-                middle_block = file_data[mid_block_start:mid_block_end]
-
-                end_block = file_data[-block_size:]
-
+            end_block = file_data[-block_size:]
+            
             print([start_block, middle_block, end_block])
-    except (FileNotFoundError, FileSizeError) as error:
+    
+    except (FileNotFoundError, FileSizeError, BlockSizeValidationError) as error:
         print(error)
     except Exception as e:
         print(f"Невідома помилка при роботі з файлом: {e}")
 
 
 if __name__ == "__main__":
-    find_file_blocks('test.txt', 5)
+    find_file_blocks('test.txt', 2)
 
