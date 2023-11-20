@@ -496,12 +496,10 @@ def update_banknotes_quantity():
                 cur.execute("UPDATE atm SET balance = ?", (new_balance,))
                 conn.commit()
                 print("Дані у таблиці успішно внесені.")
-
-                user_input = input("Бажаєте продовжити вносити зміни у кількість доступних курюр? (так/ні): ")
-                if user_input.lower() == 'так':
-                    continue
-                else:
+                
+                if not ask_user_to_continue("Бажаєте продовжити вносити зміни у кількість доступних курюр? (1 - так / 0 - ні): "):
                     break
+                
         except sqlite3.Error as e:
             print(f"Помилка при роботі з SQLite: {e}")
         except ValueError:
@@ -512,13 +510,12 @@ def update_banknotes_quantity():
             close_database_connection(conn) 
 
 
-def ask_user_to_continue(current_user):
+def ask_user_to_continue(message):
     while True:
-        user_input = input("Бажаєте продовжити проводити операції з банкоматом? (так/ні): ")
-        if user_input.lower() == 'так':
+        user_input = input(message)
+        if user_input == '1':
             return True
-        elif user_input.lower() == 'ні':
-            print(f"До наступної зустрічі, {current_user}!")
+        elif user_input == '0':
             return False
         else:
             print("Невірна відповідь. Спробуйте ще раз.")
@@ -557,7 +554,7 @@ def atm_operations(current_user):
                 else:
                     operation()
 
-                if choice == '5' or not ask_user_to_continue(current_user):
+                if choice == '5' or not ask_user_to_continue("Бажаєте продовжити проводити операції з банкоматом? (1 - так / 0 - ні): "):
                     break
 
             else:
@@ -582,7 +579,6 @@ def start():
             elif choice == '2':
                 register_and_login_user()
             elif choice == '3':
-                print(f"До наступної зустрічі!")
                 break
             else:
                 raise InvalidInputError("Ви зробили неправильний вибір, повторіть операцію")
