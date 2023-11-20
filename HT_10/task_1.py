@@ -472,6 +472,17 @@ def view_banknotes_balance():
         close_database_connection(conn) 
 
 
+def ask_user_to_continue(message):
+    while True:
+        user_input = input(message)
+        if user_input == '1':
+            return True
+        elif user_input == '0':
+            return False
+        else:
+            print("Невірна відповідь. Спробуйте ще раз.")
+
+
 def update_banknotes_quantity():
     print("Доступні номінали: 10, 20, 50, 100, 200, 500, 1000")
     conn = None
@@ -508,17 +519,6 @@ def update_banknotes_quantity():
             print(e)
         finally:
             close_database_connection(conn) 
-
-
-def ask_user_to_continue(message):
-    while True:
-        user_input = input(message)
-        if user_input == '1':
-            return True
-        elif user_input == '0':
-            return False
-        else:
-            print("Невірна відповідь. Спробуйте ще раз.")
 
 
 def atm_operations(current_user):
