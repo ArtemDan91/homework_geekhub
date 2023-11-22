@@ -12,7 +12,6 @@ class Person:
     def __init__(self, name, age):
         self.name = name
         self.age = age
-        self.profession = None
 
     def show_age(self):
         print(f"The person is {self.age} years old")
@@ -21,14 +20,14 @@ class Person:
         print(f"The person`s name is {self.name}")
 
     def show_all_information(self):
-        print(f"Person`s name: {self.name}, age: {self.age}, profession: {self.profession}")
+        print(f"Person`s name: {self.name}, age: {self.age}")
 
 
 if __name__ == "__main__":
     person_1 = Person('Jane', 25)
     person_1.profession = 'teacher'
-    person_1.show_all_information()
-
+    print(person_1.__dict__)
+    
     person_2 = Person('John', 20)
     person_2.profession = 'doctor'
-    person_2.show_all_information()
+    print(person_2.__dict__)
