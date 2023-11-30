@@ -10,33 +10,31 @@ class UserList:
     def __init__(self, *args):
         self.my_list = list(args)
 
+    def index_logic(self, index):
+        if index > 0:
+            return index - 1
+        elif index < 0:
+            return len(self.my_list) + index
+        else:
+            raise IndexError("Значення індексу не повинне дорівнювати 0")
+
     def __getitem__(self, index):
-        if index < 1:
-            raise IndexError("Значення індексу повинне бути більше 0")
-        return self.my_list[index - 1]
+        return self.my_list[self.index_logic(index)]
 
     def __setitem__(self, index, value):
-        if index < 1:
-            raise IndexError("Значення індексу повинне бути більше 0")
-        self.my_list[index - 1] = value
+        self.my_list[self.index_logic(index)] = value
 
     def __delitem__(self, index):
-        if index < 1:
-            raise IndexError("Значення індексу повинне бути більше 0")
-        del self.my_list[index - 1]
+        del self.my_list[self.index_logic(index)]
 
     def append(self, value):
         self.my_list.append(value)
 
     def pop(self, index=None):
-        if index is not None and index < 1:
-            raise IndexError("Значення індексу повинне бути більше 0")
-        return self.my_list.pop(index - 1) if index is not None else self.my_list.pop()
+        return self.my_list.pop(self.index_logic(index)) if index is not None else self.my_list.pop()
 
     def insert(self, index, value):
-        if index < 1:
-            raise IndexError("Значення індексу повинне бути більше 0")
-        self.my_list.insert(index - 1, value)
+        self.my_list.insert(self.index_logic(index), value)
 
     def remove(self, value):
         self.my_list.remove(value)
@@ -54,4 +52,4 @@ user_list.remove(3)
 user_list.pop()
 user_list.insert(1, 10)
 print(user_list)
-print(user_list[1])
+print(user_list[-1])
