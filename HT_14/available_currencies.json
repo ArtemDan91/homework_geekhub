@@ -1,0 +1,18 @@
+{
+    "1": {
+        "currency_code": "USD",
+        "currency_name": "долар США"
+    },
+    "2": {
+        "currency_code": "EUR",
+        "currency_name": "євро"
+    },
+    "3": {
+        "currency_code": "CHF",
+        "currency_name": "швейцарський франк"
+    },
+    "4": {
+        "currency_code": "GBP",
+        "currency_name": "британський фунт"
+    }
+}
