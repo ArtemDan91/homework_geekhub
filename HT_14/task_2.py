@@ -57,7 +57,6 @@ def get_available_currency_dict():
         driver.get(url)
         html_code = driver.page_source
         
-
         soup = BeautifulSoup(html_code, 'lxml')
         currencies_table = soup.select_one('div.api-description table')
 
@@ -118,7 +117,6 @@ def get_privatbank_exchange_rate_for_date():
         currency_code = get_currency_code()
         if currency_code:
             try:
-            
                 if date_input_validation(date):
                     try:
                         purchase_rate, sale_rate = create_rate_data(date, currency_code)
@@ -203,7 +201,6 @@ def handle_exchange_rate_function(func):
             print(e)
             continue    
 
-            
 
 def main():
     menu_options = {
@@ -227,7 +224,6 @@ def main():
                 raise InvalidInputError("Ви зробили неправильний вибір, повторіть операцію")
         except (FileNotFoundError, ValueError, MissingDataError, InvalidInputError, RequestException, DateIntervalValidationError) as error:
             print(error)
-            
             
 
 if __name__ == "__main__":
