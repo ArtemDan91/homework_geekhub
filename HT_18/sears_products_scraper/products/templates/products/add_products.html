@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <form method="post" action="{% url 'products:add_products' %}"
+          class="{% if form.is_valid %}was-validated{% endif %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label"><strong>Product
+                ID Addition Form</strong></label>
+            <textarea
+                class="form-control {% if form.product_id.errors %}is-invalid{% endif %}"
+                name="product_id"
+                placeholder="Enter product ID, you can input multiple IDs separated by spaces."
+            >{% if form.product_id.errors %}{{ form.product_id.value }}{% endif %}</textarea>
+
+            {% for error in form.product_id.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% for message in messages %}
+            <div class="valid-feedback">{{ message }}</div>
+            {% endfor %}
+
+            {% if scraper_result_messages %}
+                {% for product_id, scraper_result_message in scraper_result_messages %}
+                    <div class="alert alert-success" role="alert">{{ scraper_result_message }}<a href="{% url 'products:product_data' product_id %}"> Product details</a></div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-secondary">Add product(s)</button>
+    </form>
+</div>
+{% endblock %}
+

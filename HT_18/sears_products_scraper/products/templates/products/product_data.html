@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <caption>Product data</caption>
+    <table class="table">
+        <thead class="table-primary">
+        <tr>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Product ID</th>
+            <th scope="col">Short Description</th>
+            <th scope="col">Brand Name</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">URl</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ product.product_description_name }}</td>
+            <td>{{ product.sell_price }}</td>
+            <td>{{ product.product_id }}</td>
+            <td>{{ product.short_description }}</td>
+            <td>{{ product.brand_name }}</td>
+            <td>{{ product.category_name }}</td>
+            <td><a href="{{ product.url }}">{{ product.url }}</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
