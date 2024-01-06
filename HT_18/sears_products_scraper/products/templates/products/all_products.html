@@ -11,16 +11,16 @@
             <th scope="col">Price</th>
         </tr>
         </thead>
-        {% for product in products %}
         <tbody>
-        <tr>
-            <td>{{ product.id }}</td>
-            <td><a href="{% url 'products:product_data' product.product_id %}">
-                {{ product.product_description_name }}</a></td>
-            <td>{{ product.sell_price }}</td>
-        </tr>
-        </tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ forloop.counter|add:offset }}</td>
+                <td><a href="{% url 'products:product_data' product.product_id %}">
+                    {{ product.product_description_name }}</a></td>
+                <td>{{ product.sell_price }}</td>
+            </tr>
         {% endfor %}
+        </tbody>
     </table>
     <div class="pagination">
         <nav aria-label="Page navigation example">

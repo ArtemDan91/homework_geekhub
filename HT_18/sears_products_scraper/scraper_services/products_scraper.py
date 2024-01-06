@@ -1,3 +1,4 @@
+import logging
 import random
 import sys
 import time
@@ -7,41 +8,47 @@ import requests
 from requests import RequestException
 from urllib.parse import urljoin
 
+logging.basicConfig(level=logging.INFO)
+
 
 def scrape_product_data(product_id, headers, cookies):
-
     try:
         response = requests.get(
             f'https://www.sears.com/api/sal/v3/products/details/{product_id}?storeName=Sears&memberStatus=G&zipCode=10101',
             headers=headers,
             cookies=cookies,
-            )
+        )
         if response.status_code == 200:
-            product_data_json = response.json()['productDetail']['softhardProductdetails'][0]
+            product_data_json = \
+            response.json()['productDetail']['softhardProductdetails'][0]
 
             return {
-                'product_description_name': product_data_json['descriptionName'],
+                'product_description_name': product_data_json[
+                    'descriptionName'],
                 'sell_price': product_data_json['price']['finalPriceDisplay'],
                 'product_id': product_data_json['identity']['sSin'],
                 'short_description': product_data_json['seoDesc'],
                 'brand_name': product_data_json['brandName'],
-                'category_name': product_data_json['hierarchies']['specificHierarchy'][0]['name'],                                                            
-                'url': urljoin('https://www.sears.com', product_data_json['seoUrl']),
-        }
+                'category_name':
+                    product_data_json['hierarchies']['specificHierarchy'][0][
+                        'name'],
+                'url': urljoin('https://www.sears.com',
+                               product_data_json['seoUrl']),
+            }
 
     except RequestException as e:
         raise RequestException(f"Error during HTTP request: {e}")
 
 
 headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0',
-        'Accept': 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Content-Type': 'application/json',
-        'Authorization': 'SEARS',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
-    }
+    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0',
+    'Accept': 'application/json, text/plain, */*',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Content-Type': 'application/json',
+    'Authorization': 'SEARS',
+    'Pragma': 'no-cache',
+    'Cache-Control': 'no-cache',
+}
 
 cookies = {
     'forterToken': '4c74ca22d2204b00a5a8977c84fd9bd9_1703618055452_520_UDF43_13ck',
@@ -89,29 +96,31 @@ cookies = {
 }
 
 
-def save_or_update_scraped_products_data(product_id):
-    time.sleep(random.randint(4, 6))
-    try:
-        product_data = scrape_product_data(product_id, headers, cookies)
+def save_or_update_scraped_products_data(products_ids):
+    for product_id in products_ids:
+        time.sleep(random.randint(7, 10))
+        try:
+            product_data = scrape_product_data(product_id, headers, cookies)
 
-        obj, created = ScrapedProduct.objects.update_or_create(
-            product_id=product_id,
-            defaults={**product_data},
-        )
-        if created:
-            print(f"Product ID {product_id} processed. Product data created successfully!")
-        else:
-            print(f"Product ID {product_id} processed. Product data updated successfully!")
-    except Exception as e:
-        print((f"Error scraping product {product_id}: {str(e)}"))
+            obj, created = ScrapedProduct.objects.update_or_create(
+                product_id=product_id,
+                defaults={**product_data},
+            )
+            if created:
+                logging.info(f"Product ID {product_id} processed. Product data created successfully!")
+            else:
+                logging.info(f"Product ID {product_id} processed. Product data updated successfully!")
+        except Exception as e:
+            logging.error((f"Error scraping product {product_id}: {str(e)}"))
 
 
 if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     import django
+
     django.setup()
 
     from products.models import ScrapedProduct
-    product_id = sys.argv[1]
-    save_or_update_scraped_products_data(product_id)
 
+    products_ids = sys.argv[1:]
+    save_or_update_scraped_products_data(products_ids)
