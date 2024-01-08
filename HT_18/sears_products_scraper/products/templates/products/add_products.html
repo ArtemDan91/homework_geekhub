@@ -9,12 +9,12 @@
         <div class="mb-3">
             <label class="form-label"><strong>Product ID Addition Form</strong></label>
             <textarea
-                class="form-control {% if form.product_id.errors %}is-invalid{% endif %}"
-                name="product_id"
+                class="form-control {% if form.products_ids_list.errors %}is-invalid{% endif %}"
+                name="products_ids_list"
                 placeholder="Enter product ID, you can input multiple IDs separated by spaces."
-            >{% if form.product_id.errors %}{{ form.product_id.value }}{% endif %}</textarea>
+            >{% if form.products_ids_list.errors %}{{ form.products_ids_list.value }}{% endif %}</textarea>
 
-            {% for error in form.product_id.errors %}
+            {% for error in form.products_ids_list.errors %}
                 <div class="invalid-feedback">{{ error }}</div>
             {% endfor %}
             {% if form.is_valid %}

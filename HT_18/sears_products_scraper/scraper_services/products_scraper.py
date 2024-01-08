@@ -1,3 +1,4 @@
+import json
 import logging
 import random
 import sys
@@ -96,8 +97,12 @@ cookies = {
 }
 
 
-def save_or_update_scraped_products_data(products_ids):
-    for product_id in products_ids:
+def save_or_update_scraped_products_data(scraping_task_instance_id):
+    scraping_task_instance = ScrapingTask.objects.get(id=scraping_task_instance_id)
+    products_ids_json = scraping_task_instance.products_ids_list
+    products_ids_list = json.loads(products_ids_json)
+
+    for product_id in products_ids_list:
         time.sleep(random.randint(7, 10))
         try:
             product_data = scrape_product_data(product_id, headers, cookies)
@@ -121,6 +126,6 @@ if __name__ == "__main__":
     django.setup()
 
     from products.models import ScrapedProduct
-
-    products_ids = sys.argv[1:]
-    save_or_update_scraped_products_data(products_ids)
+    from products.models import ScrapingTask
+    scraping_task_instance_id = sys.argv[1]
+    save_or_update_scraped_products_data(scraping_task_instance_id)

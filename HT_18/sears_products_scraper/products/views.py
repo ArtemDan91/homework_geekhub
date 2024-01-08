@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 
@@ -33,13 +34,13 @@ def add_products(request):
     if request.method == 'POST':
         form = ScrapingTaskForm(request.POST)
         if form.is_valid():
-            products_ids_list = form.cleaned_data.get('product_id', '')
-            for product_id in products_ids_list:
-                task = ScrapingTask(product_id=product_id)
-                task.save()
+            products_ids_list = form.cleaned_data.get('products_ids_list', '')
+            serialized_products_ids_list = json.dumps(products_ids_list)
+            scraping_task_instance = ScrapingTask(products_ids_list=serialized_products_ids_list)
+            scraping_task_instance.save()
 
             script_path = str(settings.BASE_DIR / 'scraper_services' / 'products_scraper.py')
-            subprocess.Popen([sys.executable, script_path, *products_ids_list])
+            subprocess.Popen([sys.executable, script_path, str(scraping_task_instance.id)])
     else:
         form = ScrapingTaskForm()
     return render(request, 'products/add_products.html', {'form': form})

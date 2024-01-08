@@ -8,6 +8,10 @@ class ScrapedProductAdmin(admin.ModelAdmin):
                     "short_description", "brand_name", "category_name", "url"]
 
 
+class ScrapingTaskAdmin(admin.ModelAdmin):
+    list_display = ["id", "products_ids_list"]
+
+
 # Register your models here.
 admin.site.register(ScrapedProduct, ScrapedProductAdmin)
-admin.site.register(ScrapingTask)
+admin.site.register(ScrapingTask, ScrapingTaskAdmin)

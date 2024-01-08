@@ -15,4 +15,4 @@ class ScrapedProduct(models.Model):
 
 
 class ScrapingTask(models.Model):
-    product_id = models.CharField(max_length=255)
+    products_ids_list = models.TextField(null=True)
