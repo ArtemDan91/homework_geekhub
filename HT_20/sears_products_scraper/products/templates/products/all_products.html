@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif  %}
+                {% endfor %}
+            {% endif %}
+<div class="container">
+    <br>
+    {% for category in categories %}
+        <a href="{% url 'products:products_by_categories_table' category.id %}" class="btn btn-outline-primary">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+    <br><br>
+    <table class="table">
+        <thead class="table-primary">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Product name</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ forloop.counter|add:offset }}</td>
+                <td><a href="{% url 'products:product_data' product.product_id %}">
+                    {{ product.product_description_name }}</a></td>
+                <td>${{ product.sell_price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% for num in products.paginator.page_range %}
+                <li class="page-item{% if num == products.number %} active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
