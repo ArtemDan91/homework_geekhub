@@ -77,7 +77,7 @@
             <div class="row">
                 <div class="col-md-8"></div>
                 <div class="col-md-2 mx-auto text-center d-flex align-items-center justify-content-center fs-5">
-                    <span>Total Cart Amount: <strong>${{ total_cart_amount }}</strong></span>
+                    <span>Total Cart Amount: <strong>${{ cart.get_cart_total_amount }}</strong></span>
                 </div>
                 <div class="col-md-2 mx-auto text-center d-flex align-items-center justify-content-center">
                     <form method="post" action="{% url 'cart:update_cart_data' %}" class="d-flex justify-content-end">

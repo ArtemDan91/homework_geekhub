@@ -1,3 +1,4 @@
+from autoslug import AutoSlugField
 from django.db import models
 
 
@@ -23,6 +24,11 @@ class ScrapedProduct(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
+    name_slug = AutoSlugField(
+        populate_from='name',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.name

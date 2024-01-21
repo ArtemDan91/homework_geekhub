@@ -1,61 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if messages %}
-                {% for message in messages %}
-                {% if message.tags == 'success' %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message }}
+                    {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                {% endif  %}
-                {% endfor %}
-            {% endif %}
-<div class="container-fluid">
-    <br>
-    <caption>Product data</caption>
-    <form method="post" action="{% url 'products:edit_product' product.product_id %}">
-        {% csrf_token %}
-        <table class="table text-center">
-            <thead class="table-primary">
-            <tr>
-                <th scope="col">Product Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Product ID</th>
-                <th scope="col">Short Description</th>
-                <th scope="col">Brand Name</th>
-                <th scope="col">Category Name</th>
-                <th scope="col">URL</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><textarea class="form-control" rows="6" cols="60" name="product_description_name" placeholder="{{ form.product_description_name.label }}">{{ form.product_description_name.value }}</textarea></td>
-                <td><input class="form-control" type="text" name="sell_price" value="{{ form.sell_price.value }}" placeholder="{{ form.sell_price.label }}"></td>
-                <td>{{ product.product_id }}</td>
-                <td><textarea class="form-control" rows="12" cols="80" name="short_description" placeholder="{{ form.short_description.label }}">{{ form.short_description.value }}</textarea></td>
-                <td><textarea class="form-control" rows="6" cols="30" name="brand_name" placeholder="{{ form.brand_name.label }}">{{ form.brand_name.value }}</textarea></td>
-                <td>{{ product.category }}</td>
-                <td><a href="{{ product.url }}">{{ product.url }}</a></td>
-            </tr>
-            </tbody>
-        </table>
-           <div class="col-md-2 offset-md-9">
-                    <button type="submit" class="btn btn-success">Save</button>
-            <a href="{% url 'products:update_product' product.product_id %}" class="btn btn-secondary">
-            Update from the store
-        </a>
-        </div>
-    </form>
-</div>
+            {% endif  %}
+        {% endfor %}
+    {% endif %}
+    <div class="container-fluid">
+        <br>
+        <caption>Product data</caption>
+        <form method="post" action="{% url 'products:edit_product' product.category.name_slug product.product_id %}">
+            {% csrf_token %}
+            <table class="table text-center">
+                <thead class="table-primary">
+                <tr>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Product ID</th>
+                    <th scope="col">Short Description</th>
+                    <th scope="col">Brand Name</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">URL</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><textarea class="form-control" rows="6" cols="60" name="product_description_name" placeholder="{{ form.product_description_name.label }}">{{ form.product_description_name.value }}</textarea></td>
+                    <td><input class="form-control" type="text" name="sell_price" value="{{ form.sell_price.value }}" placeholder="{{ form.sell_price.label }}"></td>
+                    <td>{{ product.product_id }}</td>
+                    <td><textarea class="form-control" rows="12" cols="80" name="short_description" placeholder="{{ form.short_description.label }}">{{ form.short_description.value }}</textarea></td>
+                    <td><textarea class="form-control" rows="6" cols="30" name="brand_name" placeholder="{{ form.brand_name.label }}">{{ form.brand_name.value }}</textarea></td>
+                    <td>{{ product.category }}</td>
+                    <td><a href="{{ product.url }}">{{ product.url }}</a></td>
+                </tr>
+                </tbody>
+            </table>
+               <div class="col-md-2 offset-md-9">
+                        <button type="submit" class="btn btn-success">Save</button>
+                <a href="{% url 'products:update_product' product.category.name_slug product.product_id %}" class="btn btn-secondary">
+                Update from the store
+            </a>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
-<div class="col-md-2 offset-md-10">
-    <a href="{% url 'products:edit_product' product.product_id %}" class="btn btn-success">
-            EDIT
-        </a>
-    <a href="{% url 'products:delete_product' product.product_id %}" class="btn btn-danger">
-            DELETE
-        </a>
-    </div>

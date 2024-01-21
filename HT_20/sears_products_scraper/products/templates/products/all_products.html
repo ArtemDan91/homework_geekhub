@@ -2,19 +2,29 @@
 
 {% block content %}
     {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endif  %}
-                {% endfor %}
-            {% endif %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif  %}
+        {% endfor %}
+    {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif  %}
+        {% endfor %}
+    {% endif %}
 <div class="container">
     <br>
     {% for category in categories %}
-        <a href="{% url 'products:products_by_categories_table' category.id %}" class="btn btn-outline-primary">
+        <a href="{% url 'products:products_by_categories_table' category.name_slug %}" class="btn btn-outline-primary">
             {{ category.name }}
         </a>
     {% endfor %}
@@ -31,7 +41,7 @@
         {% for product in products %}
             <tr>
                 <td>{{ forloop.counter|add:offset }}</td>
-                <td><a href="{% url 'products:product_data' product.product_id %}">
+                <td><a href="{% url 'products:product_data' product.category.name_slug product.product_id %}">
                     {{ product.product_description_name }}</a></td>
                 <td>${{ product.sell_price }}</td>
             </tr>

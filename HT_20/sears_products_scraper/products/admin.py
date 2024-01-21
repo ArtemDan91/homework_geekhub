@@ -10,7 +10,7 @@ class ScrapedProductAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name"]
+    list_display = ["name", "name_slug"]
 
 
 class ScrapingTaskAdmin(admin.ModelAdmin):

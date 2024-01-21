@@ -1,3 +1,7 @@
+from django.shortcuts import get_object_or_404
+from products.models import ScrapedProduct
+
+
 class Cart:
 
     def __init__(self, request):
@@ -31,6 +35,38 @@ class Cart:
     def clear_cart(self):
         self.cart.clear()
         self.save()
+
+    def __len__(self):
+        return sum(self.cart.values())
+
+    def get_all_cart_products(self):
+        cart_added_products = []
+        for product_id, quantity in self.cart.items():
+            product = get_object_or_404(ScrapedProduct, product_id=product_id)
+            products_total_cost = round(float(product.sell_price) * quantity,
+                                        2)
+            cart_added_products.append(
+                {
+                    'product_id': product_id,
+                    'product_name': product.product_description_name,
+                    'sell_price': product.sell_price,
+                    'quantity': quantity,
+                    'products_total_cost': products_total_cost
+                }
+            )
+        return cart_added_products
+
+    def get_cart_total_amount(self):
+        total_cart_amount = 0
+        products_ids = self.cart.keys()
+        products = ScrapedProduct.objects.filter(product_id__in=products_ids)
+
+        for id, quantity in self.cart.items():
+            for product in products:
+                if product.product_id == id:
+                    total_cart_amount += float(product.sell_price) * quantity
+
+        return round(total_cart_amount, 2)
 
     def save(self):
         self.session.modified = True

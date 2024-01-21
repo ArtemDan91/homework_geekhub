@@ -5,11 +5,11 @@
     <br>
     {% for category in categories %}
         {% if product_category == category%}
-        <a href="{% url 'products:products_by_categories_table' category.id %}" class="btn btn-primary">
+        <a href="{% url 'products:products_by_categories_table' category.name_slug %}" class="btn btn-primary">
             {{ category.name }}
         </a>
         {% else %}
-        <a href="{% url 'products:products_by_categories_table' category.id %}" class="btn btn-outline-primary">
+        <a href="{% url 'products:products_by_categories_table' category.name_slug %}" class="btn btn-outline-primary">
             {{ category.name }}
         </a>
         {% endif %}
@@ -27,7 +27,7 @@
         {% for product in products_by_categories %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td><a href="{% url 'products:product_data' product.product_id %}">
+                <td><a href="{% url 'products:product_data' product.category.name_slug product.product_id %}">
                     {{ product.product_description_name }}</a></td>
                 <td>${{ product.sell_price }}</td>
             </tr>
