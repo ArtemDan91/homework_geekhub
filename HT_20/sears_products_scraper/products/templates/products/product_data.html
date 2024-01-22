@@ -24,7 +24,9 @@
             <th scope="col">Brand Name</th>
             <th scope="col">Category Name</th>
             <th scope="col">URl</th>
-            <th scope="col"></th>
+            {% if user.is_authenticated %}
+                <th scope="col"></th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -36,45 +38,47 @@
             <td>{{ product.brand_name }}</td>
             <td>{{ product.category }}</td>
             <td><a href="{{ product.url }}">{{ product.url }}</a></td>
-            <td class="col-2">
-                <form method="post" action="{% url 'cart:add_cart_data' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="product_id" value="{{ product.product_id }}">
-                    <input type="hidden" name="category_name_slug" value="{{ product.category.name_slug }}">
+            {% if user.is_authenticated %}
+                <td class="col-2">
+                    <form method="post" action="{% url 'cart:add_cart_data' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                        <input type="hidden" name="category_name_slug" value="{{ product.category.name_slug }}">
 
-                    <div class="input-group">
-                        <input
-                            type="number"
-                            class="form-control"
-                            name="quantity"
-                            placeholder="Enter Quantity"
-                            min="1"
-                            required
-                        >
+                        <div class="input-group">
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="quantity"
+                                min="1"
+                                required
+                                value="1"
+                            >
 
-                        <button type="submit" id="add-button" class="btn btn-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                        </svg>
-                            Add to Cart
-                        </button>
+                            <button type="submit" id="add-button" class="btn btn-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                            </svg>
+                                Add to Cart
+                            </button>
 
-                    </div>
-                </form>
-            </td>
+                        </div>
+                    </form>
+                </td>
+            {% endif %}
         </tr>
         </tbody>
     </table>
-
-        <div class="col-md-2 offset-md-10">
-    <a href="{% url 'products:edit_product' product.category.name_slug product.product_id %}" class="btn btn-success">
+    {% if user.is_superuser %}
+    <div class="col-md-2 offset-md-10">
+        <a href="{% url 'products:edit_product' product.category.name_slug product.product_id %}" class="btn btn-success">
             EDIT
         </a>
-    <a href="{% url 'products:delete_product' product.category.name_slug product.product_id %}" class="btn btn-danger">
+        <a href="{% url 'products:delete_product' product.category.name_slug product.product_id %}" class="btn btn-danger">
             DELETE
         </a>
     </div>
-
+    {% endif %}
 </div>
 
 {% endblock %}

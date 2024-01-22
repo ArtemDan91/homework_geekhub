@@ -6,14 +6,14 @@ from .cart import Cart
 from .forms import EnterProductQuantityToCartForm
 
 
-@login_required(login_url='/login/')
+@login_required
 def checkout_cart(request):
     cart = Cart(request)
     cart_added_products = cart.get_all_cart_products()
     return render(request, 'cart/cart_summary.html', {'cart_added_products': cart_added_products})
 
 
-@login_required(login_url='/login/')
+@login_required
 def add_cart_data(request):
     cart = Cart(request)
     if request.method == 'POST':
@@ -30,6 +30,7 @@ def add_cart_data(request):
                   {'form': form})
 
 
+@login_required
 def update_cart_data(request):
     cart = Cart(request)
     if request.method == 'POST':

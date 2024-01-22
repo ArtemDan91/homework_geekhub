@@ -17,7 +17,6 @@ from .models import Category
 from .models import ScrapingTask
 
 
-
 def get_all_products(request):
     products = ScrapedProduct.objects.all().order_by('id')
     categories = Category.objects.all()
@@ -45,6 +44,8 @@ def get_products_by_categories(request, category_name_slug):
 
 
 def add_products(request):
+    if not request.user.is_superuser:
+        return redirect('products:products_table')
     if request.method == 'POST':
         form = ScrapingTaskForm(request.POST)
         if form.is_valid():
@@ -83,9 +84,11 @@ def edit_product(request, category_name_slug, product_id):
 
 
 def update_product_from_store(request, category_name_slug, product_id):
+    if not request.user.is_superuser:
+        messages.error(request, "You don't have permission to update this product.")
+        return redirect('products:products_table')
     serialized_products_ids_list = json.dumps([product_id])
-    scraping_task_instance = ScrapingTask(
-        products_ids_list=serialized_products_ids_list)
+    scraping_task_instance = ScrapingTask(products_ids_list=serialized_products_ids_list)
     scraping_task_instance.save()
 
     script_path = str(
@@ -100,8 +103,7 @@ def update_product_from_store(request, category_name_slug, product_id):
 def delete_product(request, category_name_slug, product_id):
     product = get_object_or_404(ScrapedProduct, product_id=product_id)
     if not request.user.is_superuser:
-        messages.error(request,
-                       "You don't have permission to delete this product.")
+        messages.error(request, "You don't have permission to delete this product.")
         return redirect('products:products_table')
 
     cart = Cart(request)

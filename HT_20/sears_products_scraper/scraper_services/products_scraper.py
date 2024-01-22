@@ -26,7 +26,7 @@ def scrape_product_data(product_id, headers, cookies):
             return {
                 'product_description_name': product_data_json[
                     'descriptionName'],
-                'sell_price': product_data_json['price']['finalPrice'],
+                'sell_price': product_data_json['salePrice'],
                 'product_id': product_data_json['identity']['sSin'],
                 'short_description': product_data_json['seoDesc'],
                 'brand_name': product_data_json['brandName'],
