@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <br>
+    {% for category in categories %}
+        {% if product_category == category%}
+        <a href="{% url 'products:products_by_categories_table' category.name_slug %}" class="btn btn-primary">
+            {{ category.name }}
+        </a>
+        {% else %}
+        <a href="{% url 'products:products_by_categories_table' category.name_slug %}" class="btn btn-outline-primary">
+            {{ category.name }}
+        </a>
+        {% endif %}
+    {% endfor %}
+    <br><br>
+    <table class="table">
+        <thead class="table-primary">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Product name</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products_by_categories %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="{% url 'products:product_data' product.category.name_slug product.product_id %}">
+                    {{ product.product_description_name }}</a></td>
+                <td>${{ product.sell_price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
