@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -12,6 +13,7 @@ from cart.cart import Cart
 
 class CartView(APIView):
     serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
         cart = Cart(request)
@@ -61,6 +63,7 @@ class CartView(APIView):
 
 class CartProductView(APIView):
     serializer_class = CartProductDetailSerializer
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, product_id, *args, **kwargs):
         cart = Cart(request)
