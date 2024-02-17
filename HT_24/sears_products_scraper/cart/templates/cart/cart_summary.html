@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    {% if cart_added_products %}
+        {% include 'cart/empty_cart.html' %}
+        <div class="container" id="cart-data">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-5 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                        <span>Product name:</span>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                        <span>Product Quantity:</span>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                        <span>Price per unit:</span>
+                    </div>
+                    <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                        <span>Products Total Cost:</span>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    {% for product in cart_added_products %}
+                        <div class="mt-5 product-item" data-product-id="{{ product.product_id }}">
+                            <form method="post" class="row g-3">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <div class="col-md-5 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                                    <span><strong>{{ product.product_description_name }}</strong></span>
+                                </div>
+                                <div class="col-md-1 d-flex justify-content-end align-items-center">
+                                        <button type="submit" class="btn btn-outline-secondary change-quantity-action-button" name="action" value="remove_product_unit" formaction="{% url 'cart:change_product_quantity' %}" data-product-id="{{ product.product_id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8"></path>
+                                        </svg>
+                                        <span class="visually-hidden">Button</span>
+                                        </button>
+                                </div>
+                                <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6" id="product-quantity-{{ product.product_id }}">
+                                    <span>{{ product.quantity }}</span>
+                                </div>
+                                <div class="col-md-1 text-start d-flex align-items-center">
+                                        <button type="submit" class="btn btn-outline-secondary change-quantity-action-button" name="action" value="add_product_unit" formaction="{% url 'cart:change_product_quantity' %}" data-product-id="{{ product.product_id }}">
+
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"></path>
+                                        </svg>
+                                        <span class="visually-hidden">Button</span>
+                                    </button>
+                                </div>
+                                <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6">
+                                    <span><strong>${{ product.sell_price }}</strong></span>
+                                </div>
+                                <div class="col-md-1 mx-auto text-center d-flex align-items-center justify-content-center fs-6" id="product-cost-{{ product.product_id }}">
+                                    <span><strong>${{ product.products_total_cost }}</strong></span>
+                                </div>
+                                <div class="col-md-2 mx-auto text-center d-flex align-items-center justify-content-center">
+                                        <button type="submit" class="btn btn-outline-danger remove-product-action-button" formaction="{% url 'cart:remove_cart_product' %}" data-product-id="{{ product.product_id }}">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-1"><h5>Total Cart Amount: </h5></div>
+                    <div class="col-md-2 mx-auto text-center d-flex align-items-center justify-content-center fs-5" id="cart_total_amount">
+                        <span><strong>${{ cart.get_cart_total_amount }}</strong></span>
+                    </div>
+                    <div class="col-md-2 mx-auto text-center d-flex align-items-center justify-content-center">
+                        <form method="post" class="d-flex justify-content-end">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger fs-5 clear-cart-action-button" formaction="{% url 'cart:clear_cart' %}">Clear Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    <div class="container">
+        <header class="py-5 bg-light border-bottom mb-4">
+            <div class="text-center my-3">
+                <h2>Your cart is currently empty</h2>
+            </div>
+        </header>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    let cartUpdateData = {
+        operations: {
+            changeProductQuantity: {
+                url: "{% url 'cart:change_product_quantity' %}",
+            },
+            removeCartProduct: {
+                url: "{% url 'cart:remove_cart_product' %}",
+            },
+            clearCart: {
+                url: "{% url 'cart:clear_cart' %}",
+            },
+        },
+        csrfToken: "{{ csrf_token }}"
+    };
+</script>
+
+<script src="{% static 'cart/change_product_quantity.js' %}"></script>
+<script src="{% static 'cart/remove_cart_product.js' %}"></script>
+<script src="{% static 'cart/clear_cart.js' %}"></script>
+
+{% endblock %}
